@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/background">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_recipient_title"
+        android:textStyle="bold"
+        android:textColor="@color/primary_dark" />
+
+    <TextView
+        android:id="@+id/tvConfirmRecipient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="16sp"
+        android:textColor="@color/text_primary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/confirm_amount_title"
+        android:textStyle="bold"
+        android:textColor="@color/primary_dark" />
+
+    <TextView
+        android:id="@+id/tvConfirmAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/confirm_remarks_title"
+        android:textStyle="bold"
+        android:textColor="@color/primary_dark" />
+
+    <TextView
+        android:id="@+id/tvConfirmRemarks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="16sp"
+        android:textColor="@color/text_secondary" />
+
+    <Button
+        android:id="@+id/btnConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/btn_confirm_transfer"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/success" />
+
+    <Button
+        android:id="@+id/btnEditTransfer"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/btn_edit_details"
+        android:textAllCaps="false"
+        style="?attr/materialButtonOutlinedStyle" />
+
+</LinearLayout>

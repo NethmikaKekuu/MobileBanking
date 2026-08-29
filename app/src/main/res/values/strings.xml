@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">MobileBanking</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="account_balance">Your Account Balance</string>
+    <string name="available_balance">Available Balance</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="action_transfer">Transfer</string>
+    <string name="action_history">History</string>
+    <string name="recent_transactions">Recent Transactions</string>
+    <string name="no_recent_transactions">No recent transactions</string>
+    <string name="default_balance">LKR 125,000.00</string>
+
+    <!-- Transfer Form -->
+    <string name="new_transfer">New Transfer</string>
+    <string name="send_money_subtitle">Send money to anyone</string>
+    <string name="hint_recipient_account">Recipient Account Number</string>
+    <string name="hint_recipient_name">Recipient Full Name</string>
+    <string name="hint_amount">Amount (LKR)</string>
+    <string name="hint_remarks">Remarks (Optional)</string>
+    <string name="btn_review_transfer">Review Transfer</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="error_empty_account">Enter a recipient account number</string>
+    <string name="error_empty_name">Enter a recipient name</string>
+    <string name="error_invalid_amount">Enter a valid amount greater than 0</string>
+    <string name="error_max_amount">Maximum transfer amount is LKR 500,000</string>
+
+    <!-- Confirmation -->
+    <string name="confirm_recipient_title">Confirm Recipient</string>
+    <string name="confirm_amount_title">Amount</string>
+    <string name="confirm_remarks_title">Remarks</string>
+    <string name="btn_confirm_transfer">Confirm Transfer</string>
+    <string name="btn_edit_details">Edit Details</string>
+    <string name="no_remarks">No remarks</string>
+    <string name="msg_transfer_submitted">Transfer submitted</string>
+    <string name="label_recipient_format">%1$s (%2$s)</string>
+
+    <!-- History -->
+    <string name="transfer_history_title">Transfer History</string>
+    <string name="transfer_history_subtitle">Your past transactions</string>
+</resources>
