@@ -1,5 +1,6 @@
 package com.example.mobilebanking
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -50,6 +51,10 @@ class TransferFragment : Fragment() {
         binding.btnCancel.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
+
+        val prefs = requireContext().getSharedPreferences("banking_app_prefs", Context.MODE_PRIVATE)
+        binding.etRecipientAccount.setText(prefs.getString("last_recipient_account", ""))
+        binding.etRecipientName.setText(prefs.getString("last_recipient_name", ""))
     }
 
     private fun updateSubmitButtonState() {
