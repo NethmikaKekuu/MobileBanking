@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.biometric:biometric:1.1.0")
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
