@@ -71,28 +71,17 @@ class TransferFragment : Fragment() {
         val amountText = binding.etAmount.text.toString().trim()
         val remarks = binding.etRemarks.text.toString().trim()
 
-        if (account.isEmpty()) {
-            binding.etRecipientAccount.error = getString(R.string.error_empty_account)
+        val error = TransferValidator.validate(account, name, amountText)
+        if (error != null) {
+            when {
+                account.isBlank() -> binding.etRecipientAccount.error = error
+                name.isBlank() -> binding.etRecipientName.error = error
+                else -> binding.etAmount.error = error
+            }
             return
         }
 
-        if (name.isEmpty()) {
-            binding.etRecipientName.error = getString(R.string.error_empty_name)
-            return
-        }
-
-        val amount = amountText.toDoubleOrNull()
-        if ((amount == null) || (amount <= 0.0)) {
-            binding.etAmount.error = getString(R.string.error_invalid_amount)
-            return
-        }
-
-        if (amount > 500000.0) {
-            binding.etAmount.error = getString(R.string.error_max_amount)
-            return
-        }
-
-        val request = TransferRequest(account, name, amount, remarks)
+        val request = TransferRequest(account, name, amountText.toDouble(), remarks)
         (requireActivity() as MainActivity).showConfirmationFragment(request)
     }
 
