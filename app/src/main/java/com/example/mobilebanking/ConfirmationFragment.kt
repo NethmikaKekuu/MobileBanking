@@ -10,8 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -50,18 +48,16 @@ class ConfirmationFragment : Fragment() {
             transferRequest.remarks.ifEmpty { getString(R.string.no_remarks) }
 
         view.findViewById<Button>(R.id.btnConfirm).setOnClickListener {
-            val db = AppDatabase.getInstance(requireContext())
-            lifecycleScope.launch {
-                db.transferDao().insert(transferRequest)
-                val prefs = requireContext().getSharedPreferences("banking_app_prefs", Context.MODE_PRIVATE)
-                prefs.edit()
-                    .putString("last_recipient_account", transferRequest.recipientAccount)
-                    .putString("last_recipient_name", transferRequest.recipientName)
-                    .apply()
+            TransferRepository().addTransfer(transferRequest)
 
-                Toast.makeText(requireContext(), getString(R.string.msg_transfer_submitted), Toast.LENGTH_LONG).show()
-                (requireActivity() as MainActivity).showDashboardFragment()
-            }
+            val prefs = requireContext().getSharedPreferences("banking_app_prefs", Context.MODE_PRIVATE)
+            prefs.edit()
+                .putString("last_recipient_account", transferRequest.recipientAccount)
+                .putString("last_recipient_name", transferRequest.recipientName)
+                .apply()
+
+            Toast.makeText(requireContext(), getString(R.string.msg_transfer_submitted), Toast.LENGTH_LONG).show()
+            (requireActivity() as MainActivity).showDashboardFragment()
         }
 
         view.findViewById<Button>(R.id.btnEditTransfer).setOnClickListener {

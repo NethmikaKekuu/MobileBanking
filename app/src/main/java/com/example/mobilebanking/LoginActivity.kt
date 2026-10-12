@@ -2,22 +2,27 @@ package com.example.mobilebanking
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: LoginViewModel
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
 
         val executor = ContextCompat.getMainExecutor(this)
         biometricPrompt = BiometricPrompt(
@@ -27,8 +32,7 @@ class LoginActivity : AppCompatActivity() {
                     result: BiometricPrompt.AuthenticationResult
                 ) {
                     super.onAuthenticationSucceeded(result)
-                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                    finish()
+                    goToMain()
                 }
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
@@ -36,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(
                         this@LoginActivity, errString, Toast.LENGTH_SHORT
                     ).show()
-                    showPasswordForm()
+                    showLoginForm()
                 }
 
                 override fun onAuthenticationFailed() {
@@ -59,10 +63,13 @@ class LoginActivity : AppCompatActivity() {
             )
             .build()
 
-        if (canUseBiometrics()) {
+        // A fingerprint only unlocks a Firebase session that already exists on this device.
+        // The first sign-in always goes through email and password.
+        if (AuthRepository().currentUser != null && canUseBiometrics()) {
+            setContentView(R.layout.activity_login)
             biometricPrompt.authenticate(promptInfo)
         } else {
-            showPasswordForm()
+            showLoginForm()
         }
     }
 
@@ -74,11 +81,28 @@ class LoginActivity : AppCompatActivity() {
         return result == BiometricManager.BIOMETRIC_SUCCESS
     }
 
-    private fun showPasswordForm() {
-        findViewById<View>(R.id.passwordFormGroup).visibility = View.VISIBLE
-        findViewById<Button>(R.id.btnLogin).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
+    private fun showLoginForm() {
+        setContentView(ComposeView(this).apply {
+            setContent {
+                MaterialTheme {
+                    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                    LaunchedEffect(uiState.isSignedIn) {
+                        if (uiState.isSignedIn) goToMain()
+                    }
+                    LoginScreen(
+                        uiState = uiState,
+                        onEmailChange = viewModel::onEmailChange,
+                        onPasswordChange = viewModel::onPasswordChange,
+                        onSignIn = viewModel::onSignIn,
+                        onRegister = viewModel::onRegister,
+                    )
+                }
+            }
+        })
+    }
+
+    private fun goToMain() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }

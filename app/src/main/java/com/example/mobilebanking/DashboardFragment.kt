@@ -45,6 +45,17 @@ class DashboardFragment : Fragment() {
                         onGoToHistory = {
                             (requireActivity() as MainActivity).showHistoryFragment()
                         },
+                        onSignOut = {
+                            // Application context, because the fragment may be gone by the time
+                            // the cache has been cleared. CLEAR_TASK stops Back returning here.
+                            val appContext = requireContext().applicationContext
+                            viewModel.onSignOut {
+                                appContext.startActivity(
+                                    Intent(appContext, LoginActivity::class.java)
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                )
+                            }
+                        },
                     )
                 }
             }

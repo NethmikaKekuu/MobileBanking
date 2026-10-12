@@ -18,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,6 +36,7 @@ fun DashboardScreen(
     uiState: DashboardUIState,
     onGoToTransfer: () -> Unit,
     onGoToHistory: () -> Unit,
+    onSignOut: () -> Unit,
 ) {
     val primary = colorResource(R.color.primary)
     val primaryDark = colorResource(R.color.primary_dark)
@@ -57,6 +59,11 @@ fun DashboardScreen(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = primaryDark,
+        )
+        Text(
+            text = uiState.userEmail,
+            style = MaterialTheme.typography.bodyMedium,
+            color = colorResource(R.color.text_primary),
         )
         Text(
             text = stringResource(R.string.account_balance),
@@ -171,6 +178,13 @@ fun DashboardScreen(
             color = textSecondary,
             modifier = Modifier.padding(top = 8.dp),
         )
+
+        OutlinedButton(
+            onClick = onSignOut,
+            modifier = Modifier.padding(top = 24.dp),
+        ) {
+            Text(stringResource(R.string.action_sign_out))
+        }
     }
 }
 
@@ -179,9 +193,10 @@ fun DashboardScreen(
 private fun DashboardScreenPreview() {
     MaterialTheme {
         DashboardScreen(
-            uiState = DashboardUIState(greeting = "Good morning"),
+            uiState = DashboardUIState(greeting = "Good morning", userEmail = "student@example.com"),
             onGoToTransfer = {},
             onGoToHistory = {},
+            onSignOut = {},
         )
     }
 }

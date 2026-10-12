@@ -10,9 +10,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class DashboardViewModel : ViewModel() {
+class DashboardViewModel(
+    private val auth: AuthRepository = AuthRepository(),
+    private val transfers: TransferRepository = TransferRepository(),
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DashboardUIState())
+    private val _uiState = MutableStateFlow(
+        DashboardUIState(userEmail = auth.currentUser?.email.orEmpty())
+    )
     val uiState: StateFlow<DashboardUIState> = _uiState.asStateFlow()
 
     init {
@@ -22,6 +27,16 @@ class DashboardViewModel : ViewModel() {
         viewModelScope.launch {
             delay(1000)
             _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    // Signing out leaves Firestore's offline cache on the phone, so it is cleared before
+    // going back to the login screen. Otherwise the next user could see this user's transfers.
+    fun onSignOut(onDone: () -> Unit) {
+        viewModelScope.launch {
+            auth.signOut()
+            runCatching { transfers.clearLocalCache() } // sign-out must finish even if this fails
+            onDone()
         }
     }
 
