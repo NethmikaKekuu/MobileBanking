@@ -7,11 +7,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 class DashboardFragment : Fragment() {
+
+    private val viewModel: DashboardViewModel by viewModels()
 
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -23,19 +30,29 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
+            setContent {
+                MaterialTheme {
+                    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                    DashboardScreen(
+                        uiState = uiState,
+                        onGoToTransfer = {
+                            (requireActivity() as MainActivity).showTransferFragment()
+                        },
+                        onGoToHistory = {
+                            (requireActivity() as MainActivity).showHistoryFragment()
+                        },
+                    )
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        view.findViewById<Button>(R.id.btnGoToTransfer).setOnClickListener {
-            (requireActivity() as MainActivity).showTransferFragment()
-        }
-
-        view.findViewById<Button>(R.id.btnGoToHistory).setOnClickListener {
-            (requireActivity() as MainActivity).showHistoryFragment()
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)

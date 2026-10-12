@@ -10,7 +10,6 @@
     <string name="action_history">History</string>
     <string name="recent_transactions">Recent Transactions</string>
     <string name="no_recent_transactions">No recent transactions</string>
-    <string name="default_balance">LKR 125,000.00</string>
 
     <!-- Transfer Form -->
     <string name="new_transfer">New Transfer</string>

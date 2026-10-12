@@ -2,6 +2,9 @@ package com.example.mobilebanking
 
 import android.Manifest
 import android.os.Build
+import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
@@ -10,7 +13,6 @@ import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
@@ -33,11 +35,14 @@ class TransferFlowTest {
         }
 
     @get:Rule(order = 1)
-    val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    val composeRule = createAndroidComposeRule<MainActivity>()
 
     @Test
     fun validTransferShowsConfirmationScreen() {
-        onView(withId(R.id.btnGoToTransfer)).perform(click())
+        // Dashboard is drawn by Compose now, so its button has no view id for Espresso to match.
+        composeRule
+            .onNodeWithText(composeRule.activity.getString(R.string.action_transfer))
+            .performClick()
 
         // TransferFragment pre-fills account and name from the last confirmed transfer,
         // so clear them first or typeText() appends to the saved values.
